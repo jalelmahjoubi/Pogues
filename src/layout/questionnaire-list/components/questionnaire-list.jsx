@@ -9,6 +9,7 @@ import { formatDate, getState } from 'utils/component/component-utils';
 const QuestionnaireList = props => {
   const { questionnaires, user } = props;
   const [filter, setFilter] = useState('');
+  const [loaded, setLoaded] = useState(false);
 
   const updateFilter = value => {
     setFilter(value);
@@ -42,11 +43,9 @@ const QuestionnaireList = props => {
 
   useEffect(() => {
     if (props.user && props.user.permission)
-      props.loadQuestionnaireList(props.user.permission);
-  }, []);
-
-  useEffect(() => {
-    props.loadQuestionnaireList(props.user.permission);
+      props.loadQuestionnaireList(props.user.permission).then(() => {
+        setLoaded(true);
+      });
   }, [props.user.permission]);
 
   return (
@@ -73,10 +72,12 @@ const QuestionnaireList = props => {
             </div>
             {list}
           </div>
-        ) : (
+        ) : loaded ? (
           <div className="questionnaire-list_noresults">
-            {Dictionary.noQuestionnnaires}
+            {Dictionary.noQuestionnaires}
           </div>
+        ) : (
+          <div className="questionnaire-list_loading">{Dictionary.loading}</div>
         )}
       </div>
     </div>
@@ -86,6 +87,7 @@ const QuestionnaireList = props => {
 
 QuestionnaireList.propTypes = {
   loadQuestionnaireList: PropTypes.func.isRequired,
+  duplicateQuestionnaire: PropTypes.func.isRequired,
   questionnaires: PropTypes.array,
   user: PropTypes.shape({
     name: PropTypes.string,
@@ -99,4 +101,5 @@ QuestionnaireList.defaultProps = {
   questionnaires: [],
   user: {},
 };
+
 export default QuestionnaireList;
