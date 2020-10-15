@@ -37,6 +37,7 @@ const QuestionnaireList = props => {
           label={q.label}
           lastUpdatedDate={q.lastUpdatedDate}
           final={q.final}
+          duplicateQuestionnaire={props.duplicateQuestionnaire}
         />
       );
     });
@@ -87,7 +88,6 @@ const QuestionnaireList = props => {
 
 QuestionnaireList.propTypes = {
   loadQuestionnaireList: PropTypes.func.isRequired,
-  duplicateQuestionnaire: PropTypes.func.isRequired,
   questionnaires: PropTypes.array,
   user: PropTypes.shape({
     name: PropTypes.string,

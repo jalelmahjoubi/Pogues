@@ -143,7 +143,7 @@ export const createQuestionnaire = questionnaireNewState => (
   dispatch,
   getState,
 ) => {
-  console.log('questionnaireNewState', questionnaireNewState)
+  console.log('questionnaireNewState', questionnaireNewState);
   const state = getState();
   const stores = {
     componentsStore: Component({
@@ -195,16 +195,7 @@ export const removeQuestionnaire = idQuestionnaire => (dispatch, getState) => {
     type: DELETE_QUESTIONNAIRE,
     payload: idQuestionnaire,
   });
-
   const state = getState().questionnaireById;
-  console.log("state", state)
-  console.log("Object.keys(state)", Object.keys(state))
-  console.log("idQuestionnaire", idQuestionnaire)
-  
-  const testQuestionnaire = Object.keys(state).find( currentId => state[currentId].id == idQuestionnaire);
-
-  console.log("testQuestionnaire", testQuestionnaire)
-
   const questionnairesList = Object.keys(state).reduce((acc, currentId) => {
     if (currentId !== idQuestionnaire) {
       return {
@@ -216,6 +207,8 @@ export const removeQuestionnaire = idQuestionnaire => (dispatch, getState) => {
     }
     return acc;
   }, {});
+  console.log('questionnairesList', questionnairesList);
+  
 
   return deleteQuestionnaire(idQuestionnaire)
     .then(() => {
@@ -231,32 +224,31 @@ export const removeQuestionnaire = idQuestionnaire => (dispatch, getState) => {
  *
  */
 
-export const duplicateQuestionnaire = idQuestionnaire => (dispatch, getState) => {
-
+export const duplicateQuestionnaire = idQuestionnaire => (
+  dispatch,
+  getState,
+) => {
   const state = getState();
   const questionnaires = getState().questionnaireById;
 
+  console.log('idQuestionnaire', idQuestionnaire)
   const model = {
     ...questionnaires[idQuestionnaire],
-    id : uuid(),
+    id: uuid(),
   };
   model.name = `${model.name}-${Dictionary.copy}`;
   model.label = `${model.label} - ${Dictionary.copy}`;
-
-  console.log("model", model)
-  console.log("state", state)
-  
   const codeListStore = {
-    ...state.codeListByQuestionnaire[idQuestionnaire]
+    ...state.codeListByQuestionnaire[idQuestionnaire],
   };
   const calculatedVariablesStore = {
-    ...state.calculatedVariableByQuestionnaire[idQuestionnaire]
+    ...state.calculatedVariableByQuestionnaire[idQuestionnaire],
   };
   const externalVariablesStore = {
-    ...state.externalVariableByQuestionnaire[idQuestionnaire]
+    ...state.externalVariableByQuestionnaire[idQuestionnaire],
   };
   const collectedVariableByQuestionStore = {
-    ...state.collectedVariableByQuestionnaire[idQuestionnaire]
+    ...state.collectedVariableByQuestionnaire[idQuestionnaire],
   };
 
   const stores = {
@@ -271,10 +263,7 @@ export const duplicateQuestionnaire = idQuestionnaire => (dispatch, getState) =>
     campaignsStore: state.metadataByType.campaigns,
   };
 
-  const questionnaireModel = Questionnaire.stateToRemote(
-    model,
-    stores,
-  );
+  const questionnaireModel = Questionnaire.stateToRemote(model, stores);
 
   dispatch({
     type: CREATE_QUESTIONNAIRE,
